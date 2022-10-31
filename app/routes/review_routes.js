@@ -1,13 +1,13 @@
 // Import Dependencies
 const express = require('express')
-const Companies = require('./companies')
+const Company = require('./company')
 
 // Create router
 const router = express.Router()
 
 // all users can post reviews
 router.post("/:companyId", (req, res) => {
-    const companyId = req.params.companiesId
+    const companyId = req.params.companyId
 
     Company.findById(companyId)
         .then(company => {
@@ -17,7 +17,7 @@ router.post("/:companyId", (req, res) => {
             return company.save()
         })
         .then(company => {
-            res.redirect(`/companies/${company.id}`)
+            res.redirect(`/company/${company.id}`)
         })
         //  --> send some kind of error depending on what went wrong
         .catch(err => res.redirect(`/error?error=${err}`))
@@ -42,7 +42,7 @@ router.delete('/delete/:companyId/:revId', (req, res) => {
                 if (theReview.author == req.session.userId) {
                     theReview.remove()
                     company.save()
-                    res.redirect(`/companies/${company.id}`)
+                    res.redirect(`/company/${company.id}`)
                     // return the saved company
                     return company.save()
                 } else {

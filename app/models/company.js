@@ -10,8 +10,8 @@ const companySchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		logo: {
-			type: Image,
+		domain: {
+			type: String,
 		},
 		owner: {
 			type: mongoose.Schema.Types.ObjectId,

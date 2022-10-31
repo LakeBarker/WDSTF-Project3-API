@@ -3,8 +3,8 @@ const express = require('express')
 // Passport docs: http://www.passportjs.org/docs/
 const passport = require('passport')
 
-// pull in Mongoose model for companies
-const Companies = require('../models/company')
+// pull in Mongoose model for company
+const Company = require('../models/company')
 
 const customErrors = require('../../lib/custom_errors')
 
@@ -23,23 +23,23 @@ const requireToken = passport.authenticate('bearer', { session: false })
 const router = express.Router()
 
 // INDEX
-// GET /companies
-router.get('/companies', requireToken, (req, res, next) => {
-	Companies.find()
-		.then((companies) => {
-			// `companies` will be an array of Mongoose documents
-			return companies.map((company) => company.toObject())
+// GET /company
+router.get('/company', requireToken, (req, res, next) => {
+	Company.find()
+		.then((company) => {
+			// `company` will be an array of Mongoose documents
+			return company.map((company) => company.toObject())
 		})
-		.then((companies) => res.status(200).json({ companies: company }))
+		.then((company) => res.status(200).json({ company: company }))
 		// if an error occurs, pass it to the handler
 		.catch(next)
 })
 
 // SHOW
-// GET /companies/5a7db6c74d55bc51bdf39793
-router.get('/companies/:id', requireToken, (req, res, next) => {
+// GET /company/5a7db6c74d55bc51bdf39793
+router.get('/company/:id', requireToken, (req, res, next) => {
 	// req.params.id will be set based on the `:id` in the route
-	Companies.findById(req.params.id)
+	Company.findById(req.params.id)
 		.then(handle404)
 		// if `findById` is succesful, respond with 200 and "company" JSON
 		.then((company) => res.status(200).json({ compnay: company.toObject() }))
@@ -48,12 +48,12 @@ router.get('/companies/:id', requireToken, (req, res, next) => {
 })
 
 // CREATE
-// POST /companies
-router.post('/companies', requireToken, (req, res, next) => {
+// POST /company
+router.post('/company', requireToken, (req, res, next) => {
 	// set owner of new company to be current user
 	req.body.company.owner = req.user.id
 
-	Companies.create(req.body.compnay)
+	Company.create(req.body.compnay)
 		// respond to succesful `create` with status 201 and JSON of new "company"
 		.then((company) => {
 			res.status(201).json({ company: company.toObject() })
@@ -65,13 +65,13 @@ router.post('/companies', requireToken, (req, res, next) => {
 })
 
 // UPDATE
-// PATCH /companies/5a7db6c74d55bc51bdf39793
-router.patch('/companies/:id', requireToken, removeBlanks, (req, res, next) => {
+// PATCH /company/5a7db6c74d55bc51bdf39793
+router.patch('/company/:id', requireToken, removeBlanks, (req, res, next) => {
 	// if the client attempts to change the `owner` property by including a new
 	// owner, prevent that by deleting that key/value pair
 	delete req.body.company.owner
 
-	Companies.findById(req.params.id)
+	Company.findById(req.params.id)
 		.then(handle404)
 		.then((company) => {
 			// pass the `req` object and the Mongoose record to `requireOwnership`
@@ -88,9 +88,9 @@ router.patch('/companies/:id', requireToken, removeBlanks, (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /companies/5a7db6c74d55bc51bdf39793
-router.delete('/companies/:id', requireToken, (req, res, next) => {
-	Companies.findById(req.params.id)
+// DELETE /company/5a7db6c74d55bc51bdf39793
+router.delete('/company/:id', requireToken, (req, res, next) => {
+	Company.findById(req.params.id)
 		.then(handle404)
 		.then((company) => {
 			// throw an error if current user doesn't own `company`
