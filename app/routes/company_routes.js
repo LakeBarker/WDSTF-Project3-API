@@ -72,9 +72,6 @@ router.post('/companies/search', requireToken, async (req, res, next) => {
 })
 
 
-
-
-
 // UPDATE
 // PATCH 
 router.patch('/companies/:id', requireToken, removeBlanks, (req, res, next) => {
