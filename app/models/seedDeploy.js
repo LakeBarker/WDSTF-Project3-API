@@ -1,12 +1,13 @@
 const mongoose = require('mongoose')
+require("dotenv").config()
 const bcrypt = require('bcrypt')
 
 const Company = require('./company')
-const User = require('./user')
 const Review = require('./review')
+const User = require('./user')
 
-const database = require('../../config/db')
-mongoose.connect(database, {useNewUrlParser: true})
+const currentDb = process.env.MONGODB_URI
+mongoose.connect(currentDb, {useNewUrlParser: true})
 const db = mongoose.connection
 
 
